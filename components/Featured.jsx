@@ -38,7 +38,7 @@ const ImageWrapper = styled.div`
     flex: 40%;
 `;
 
-export default function Featured() {
+export default function Featured({ product }) {
   return (
     <DarkBG>
       <Center>
