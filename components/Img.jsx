@@ -7,10 +7,10 @@ const Relative = styled.div`
   height: 300px;
 `;
 
-export default function Img({ className, src, alt, fill }) {
+export default function Img(props) {
   return (
     <Relative>
-      <Image className={className} src={src} alt={alt || "image alt"} fill={fill} />
+      <Image {...props} alt={props?.alt || 'product image'} />
     </Relative>
   );
 }
