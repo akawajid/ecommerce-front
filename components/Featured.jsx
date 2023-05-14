@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import Image from "next/image";
 import Center from "./Center";
 import Img from "./Img";
 import ButtonLink from "./ButtonLink";
-import Button from './Button';
+import Button from "./Button";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 const DarkBG = styled.div`
   background-color: #111;
@@ -12,7 +13,7 @@ const DarkBG = styled.div`
 const FeaturedDiv = styled.div`
   padding: 40px 0;
   display: flex;
-  gap:100px;
+  gap: 100px;
   justify-content: space-between;
 `;
 
@@ -33,40 +34,42 @@ const FeaturedImage = styled(Img)`
 `;
 
 const DetailWrapper = styled.div`
-    flex: 60%;
+  flex: 60%;
 `;
 
 const ImageWrapper = styled.div`
-    flex: 40%;
+  flex: 40%;
 `;
 
 const ButtonWrapper = styled.div`
-  display:flex;
+  display: flex;
   gap: 2rem;
 `;
 
-const addToCart = () => {
-  console.log('added to cart...');
-}
+export default function Featured({ _id, title, description, images }) {
+  const { addProductToCart } = useContext(CartContext);
 
-export default function Featured({ product }) {
   return (
     <DarkBG>
       <Center>
         <FeaturedDiv>
           <DetailWrapper>
-            <FeaturedTitle>{product.title}</FeaturedTitle>
-            <FeaturedDesc>{product.description}</FeaturedDesc>
+            <FeaturedTitle>{title}</FeaturedTitle>
+            <FeaturedDesc>{description}</FeaturedDesc>
             <ButtonWrapper>
-                <ButtonLink href={'/product/'+product._id} outline={1} white={1}>Read more</ButtonLink>
-                <Button white onClick={addToCart}>Add To Cart</Button>
+              <ButtonLink href={"/product/" + _id} outline={1} white={1}>
+                Read more
+              </ButtonLink>
+              <Button white onClick={() => addProductToCart(_id)}>
+                Add To Cart
+              </Button>
             </ButtonWrapper>
           </DetailWrapper>
           <ImageWrapper>
             <FeaturedImage
-              src={`/upload/products/${[product.images[0]]}`}
+              src={`/upload/products/${[images[0]]}`}
               fill={true}
-              alt="{product.title}"
+              alt={title}
             />
           </ImageWrapper>
         </FeaturedDiv>

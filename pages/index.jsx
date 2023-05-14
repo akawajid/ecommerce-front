@@ -11,7 +11,7 @@ export default function Home({ featuredProduct, newProducts }) {
     <Head>
       <title>Ecommerce Front</title>
     </Head>
-    <Featured product={featuredProduct} />
+    <Featured {...featuredProduct} />
     <NewProducts products={newProducts} />
     </>
   )
