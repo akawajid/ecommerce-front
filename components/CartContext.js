@@ -17,6 +17,10 @@ export function CartContextProvider({ children }) {
     });
   };
 
+  const emptyThisCart = () => {
+    setCartProducts([]);
+  }
+
   useEffect(() => {
     const products = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_KEY));
     if (products?.length > 0) {
@@ -30,7 +34,7 @@ export function CartContextProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cartProducts, addProductToCart, removeProductFromCart }}
+      value={{ cartProducts, addProductToCart, removeProductFromCart, emptyThisCart }}
     >
       {children}
     </CartContext.Provider>

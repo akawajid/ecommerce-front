@@ -8,6 +8,8 @@ import axios from "axios";
 import Img from "@/components/Img";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 const CheckoutWrapper = styled.div`
   display: flex;
@@ -68,12 +70,15 @@ const CityWrapper = styled.div`
   gap: 1rem;
 `;
 
-export default function Cart() {
-  const { cartProducts, addProductToCart, removeProductFromCart } =
+export default function Cart({ props }) {
+  const router = useRouter();
+  const { cartProducts, addProductToCart, removeProductFromCart, emptyThisCart } =
     useContext(CartContext);
   const [cartProductsQty, setCartProductsQty] = useState({});
   const [products, setProducts] = useState([]);
   const [orderData, setOrderData] = useState({});
+  const [successShown, setSuccessShown] = useState(true);
+
   let cartTotal = 0;
 
   useEffect(() => {
@@ -94,9 +99,10 @@ export default function Cart() {
       });
 
     const productsQty = {};
-    cartProducts.forEach((productId) => {
-      productsQty[productId] = (productsQty[productId] || 0) + 1;
-    });
+    cartProducts.forEach(
+      (productId) =>
+        (productsQty[productId] = (productsQty[productId] || 0) + 1)
+    );
 
     setCartProductsQty(productsQty);
   }, [cartProducts]);
@@ -114,8 +120,63 @@ export default function Cart() {
     setOrderData({ ...orderData, [name]: value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await axios.post("/api/checkout", {
+      orderData,
+      cartProducts,
+    });
+
+    if (response.data?.url) {
+      window.location = response.data.url;
+    }
+  };
+
+  if (router.query?.success === "1" && !successShown) {
+    emptyThisCart();
+    setSuccessShown(ture);
+
+    return (
+      <Center>
+        <Head>
+          <title>Order Completed</title>
+        </Head>
+        <CheckoutWrapper>
+          <CartProductsWrapper>
+            <h1>Thank you for your order!</h1>
+            <p style={{ margin: "10px 0" }}>
+              An email will be sent, when your order is ready...
+            </p>
+          </CartProductsWrapper>
+        </CheckoutWrapper>
+      </Center>
+    );
+  }
+
+  if (router.query?.cancelled === "1") {
+    return (
+      <Center>
+        <Head>
+          <title>Failed To Place Order</title>
+        </Head>
+        <CheckoutWrapper>
+          <CartProductsWrapper>
+            <h1>Something went wrong!</h1>
+            <p style={{ margin: "10px 0" }}>
+              Please try again the payment or cantact customer support...
+            </p>
+          </CartProductsWrapper>
+        </CheckoutWrapper>
+      </Center>
+    );
+  }
+
   return (
     <Center>
+      <Head>
+        <title>Your Cart</title>
+      </Head>
       <CheckoutWrapper>
         <CartProductsWrapper>
           <Title>Cart</Title>
@@ -179,12 +240,13 @@ export default function Cart() {
         </CartProductsWrapper>
         <ShippingInfoWrapper>
           <Title>Order Information</Title>
-          <form action="/api/checkout" method="post">
+          <form onSubmit={handleSubmit}>
             <Input
               type="text"
               name="name"
               required
               placeholder="Name"
+              value="Wajid"
               onChange={handleChange}
             />
             <Input
@@ -192,12 +254,14 @@ export default function Cart() {
               name="email"
               required
               placeholder="Email"
+              value="wajid@gmail.com"
               onChange={handleChange}
             />
             <Input
               type="text"
               name="address"
               placeholder="Address"
+              value="Abu Shaghara"
               onChange={handleChange}
             />
             <CityWrapper>
@@ -206,6 +270,7 @@ export default function Cart() {
                 name="city"
                 required
                 placeholder="City"
+                value="Sharjah"
                 onChange={handleChange}
               />
               <Input
@@ -213,6 +278,7 @@ export default function Cart() {
                 name="postalCode"
                 required
                 placeholder="Postal Code"
+                value="0000"
                 onChange={handleChange}
               />
             </CityWrapper>
@@ -221,21 +287,18 @@ export default function Cart() {
               name="streetAddress"
               required
               placeholder="Street Address"
+              value="Al Wahda Street"
               onChange={handleChange}
             />
             <Input
               type="text"
               name="country"
               placeholder="Country"
+              value="UAE"
               onChange={handleChange}
             />
             <br />
             <br />
-            <input
-              type="hidden"
-              name="products"
-              value={cartProducts.join(",")}
-            />
             <Button black block type="submit">
               Proceed to payment
             </Button>
