@@ -77,7 +77,8 @@ export default function Cart({ props }) {
   const [cartProductsQty, setCartProductsQty] = useState({});
   const [products, setProducts] = useState([]);
   const [orderData, setOrderData] = useState({});
-  const [successShown, setSuccessShown] = useState(true);
+  const [redirectLoader, setRedirectLoader ] = useState(false);
+  const [successShown, setSuccessShown] = useState(false);
 
   let cartTotal = 0;
 
@@ -122,6 +123,7 @@ export default function Cart({ props }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setRedirectLoader(true);
 
     const response = await axios.post("/api/checkout", {
       orderData,
@@ -133,9 +135,31 @@ export default function Cart({ props }) {
     }
   };
 
+  if(redirectLoader){
+    return (
+      <Center>
+        <Head>
+          <title>Checkout</title>
+        </Head>
+        <CheckoutWrapper>
+          <CartProductsWrapper>
+            <h1>Preparing checkout!</h1>
+            <p style={{ margin: "10px 0" }}>
+              You are being redirected to Stripe website for online payment...
+            </p>
+          </CartProductsWrapper>
+        </CheckoutWrapper>
+      </Center>
+    );
+  }
+
   if (router.query?.success === "1" && !successShown) {
     emptyThisCart();
-    setSuccessShown(ture);
+
+    setTimeout(() => {
+      setSuccessShown(true);
+      window.location.href = '/cart';
+    }, 5000);
 
     return (
       <Center>

@@ -22,6 +22,16 @@ export const ButtonStyle = css`
       width: 100%;
     `}
   ${(props) =>
+    props.md &&
+    css`
+      padding: 10px 20px;
+    `}
+  ${(props) =>
+    props.lg &&
+    css`
+      padding: 15px 30px;
+    `}
+  ${(props) =>
     props.white &&
     !props.outline &&
     css`

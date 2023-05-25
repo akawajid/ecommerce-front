@@ -1,3 +1,4 @@
+import { Order } from "@/models/Order";
 import { buffer } from "micro";
 import Stripe from "stripe";
 
@@ -23,9 +24,9 @@ export default async function handler(req, res) {
     }
 
     if (event.type === "charge.succeeded") {
-      const charge = event.data.object;
       const { metadata } = event.data.object;
-      console.log(event.data);
+
+      await Order.findByIdAndUpdate(metadata?.orderId, {paid: true});
     } else {
       console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);
     }

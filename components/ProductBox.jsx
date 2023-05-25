@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Img from "./Img";
 import Button from "./Button";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import { CartContext } from "./CartContext";
 
 const ProductWrapper = styled.div`
   flex: 1 1 calc(25% - 2rem);
+  max-width: calc(25% - 2rem);
   max-height: 180px;
   margin-bottom: 30px;
 `;
@@ -71,7 +71,7 @@ export default function ProductBox({ _id, title, price, images }) {
       </WhiteBox>
       <ProductTitle href={productURI}>{title}</ProductTitle>
       <PriceWrapper>
-        <Price>$ {price}</Price>
+        <Price>${price}</Price>
         <Button primary outline onClick={() => addProductToCart(_id)}>
           Add To Cart
         </Button>

@@ -42,7 +42,7 @@ export default function Header() {
           <Logo href={"/"}>Ecommerce</Logo>
           <NavWrapper>
             <NavLink href={"/"}>Home</NavLink>
-            <NavLink href={"/"}>All Products</NavLink>
+            <NavLink href={"/products"}>All Products</NavLink>
             <NavLink href={"/"}>Categories</NavLink>
             <NavLink href={"/"}>My Account</NavLink>
             <NavLink href={"/cart"}>Cart ({cartProducts?.length || 0})</NavLink>
