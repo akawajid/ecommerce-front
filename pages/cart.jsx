@@ -15,7 +15,27 @@ const CheckoutWrapper = styled.div`
   display: flex;
   gap: 5rem;
   justify-content: center;
+  align-items: flex-start;
   margin: 20px;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+`;
+
+const ProductTitle = styled.span`
+  display: block;
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
+
+const ProductTitleRow = styled.tr`
+  display: none;
+  @media (max-width: 480px) {
+    display: table-row;
+  }
 `;
 
 const CartProductsWrapper = styled.div`
@@ -55,6 +75,15 @@ const ProductImageBox = styled.div`
       max-height: 80px;
     }
   }
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+    margin-top: 12px;
+    img {
+      max-width: 40px;
+      max-height: 40px;
+    }
+  }
 `;
 
 const QtyButtonWrapper = styled.span`
@@ -72,12 +101,16 @@ const CityWrapper = styled.div`
 
 export default function Cart({ props }) {
   const router = useRouter();
-  const { cartProducts, addProductToCart, removeProductFromCart, emptyThisCart } =
-    useContext(CartContext);
+  const {
+    cartProducts,
+    addProductToCart,
+    removeProductFromCart,
+    emptyThisCart,
+  } = useContext(CartContext);
   const [cartProductsQty, setCartProductsQty] = useState({});
   const [products, setProducts] = useState([]);
   const [orderData, setOrderData] = useState({});
-  const [redirectLoader, setRedirectLoader ] = useState(false);
+  const [redirectLoader, setRedirectLoader] = useState(false);
   const [successShown, setSuccessShown] = useState(false);
 
   let cartTotal = 0;
@@ -126,7 +159,7 @@ export default function Cart({ props }) {
     setRedirectLoader(true);
 
     const response = await axios.post("/api/checkout", {
-      orderData,
+      ...orderData,
       cartProducts,
     });
 
@@ -135,7 +168,7 @@ export default function Cart({ props }) {
     }
   };
 
-  if(redirectLoader){
+  if (redirectLoader) {
     return (
       <Center>
         <Head>
@@ -158,7 +191,7 @@ export default function Cart({ props }) {
 
     setTimeout(() => {
       setSuccessShown(true);
-      window.location.href = '/cart';
+      window.location.href = "/cart";
     }, 5000);
 
     return (
@@ -221,33 +254,41 @@ export default function Cart({ props }) {
                   cartTotal += qty * item.price;
                   return (
                     qty > 0 && (
-                      <tr key={index}>
-                        <td>
-                          <ProductImageBox>
-                            <Img
-                              src={`/upload/products/${item?.images[0]}`}
-                              width={100}
-                              height={100}
-                              alt={item.title}
-                            />
-                          </ProductImageBox>
-                          {item.title}
-                        </td>
-                        <td>
-                          <QtyButtonWrapper>
-                            <Button onClick={() => decreaseQty(item._id)}>
-                              -
-                            </Button>
-                            {cartProductsQty[item._id]}
-                            <Button onClick={() => increaseQty(item._id)}>
-                              +
-                            </Button>
-                          </QtyButtonWrapper>
-                        </td>
-                        <td>
-                          ${(item.price * cartProductsQty[item._id]).toFixed(2)}
-                        </td>
-                      </tr>
+                      <>
+                        <tr key={index}>
+                          <td>
+                            <ProductImageBox>
+                              <Img
+                                src={`/upload/products/${item?.images[0]}`}
+                                width={100}
+                                height={100}
+                                alt={item.title}
+                              />
+                            </ProductImageBox>
+                            <ProductTitle>{item.title}</ProductTitle>
+                          </td>
+                          <td>
+                            <QtyButtonWrapper>
+                              <Button onClick={() => decreaseQty(item._id)}>
+                                -
+                              </Button>
+                              {cartProductsQty[item._id]}
+                              <Button onClick={() => increaseQty(item._id)}>
+                                +
+                              </Button>
+                            </QtyButtonWrapper>
+                          </td>
+                          <td>
+                            $
+                            {(item.price * cartProductsQty[item._id]).toFixed(
+                              2
+                            )}
+                          </td>
+                        </tr>
+                        <ProductTitleRow key={index * 1000}>
+                          <td colSpan={3}>{item.title}</td>
+                        </ProductTitleRow>
+                      </>
                     )
                   );
                 })}
@@ -270,7 +311,6 @@ export default function Cart({ props }) {
               name="name"
               required
               placeholder="Name"
-              value="Wajid"
               onChange={handleChange}
             />
             <Input
@@ -278,14 +318,12 @@ export default function Cart({ props }) {
               name="email"
               required
               placeholder="Email"
-              value="wajid@gmail.com"
               onChange={handleChange}
             />
             <Input
               type="text"
               name="address"
               placeholder="Address"
-              value="Abu Shaghara"
               onChange={handleChange}
             />
             <CityWrapper>
@@ -294,7 +332,6 @@ export default function Cart({ props }) {
                 name="city"
                 required
                 placeholder="City"
-                value="Sharjah"
                 onChange={handleChange}
               />
               <Input
@@ -302,7 +339,6 @@ export default function Cart({ props }) {
                 name="postalCode"
                 required
                 placeholder="Postal Code"
-                value="0000"
                 onChange={handleChange}
               />
             </CityWrapper>
@@ -311,14 +347,12 @@ export default function Cart({ props }) {
               name="streetAddress"
               required
               placeholder="Street Address"
-              value="Al Wahda Street"
               onChange={handleChange}
             />
             <Input
               type="text"
               name="country"
               placeholder="Country"
-              value="UAE"
               onChange={handleChange}
             />
             <br />

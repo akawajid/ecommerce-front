@@ -3,7 +3,10 @@ import { useEffect } from "react";
 import styled from "styled-components";
 
 const Relative = styled.div`
-  position: relative;
+  position:relative;
+  display: flex;
+  justify-content:center;
+  align-items:center;
   width: 100%;
   height: ${(props) => props.height || 300}px;
 `;

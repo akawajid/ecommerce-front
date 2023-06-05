@@ -13,6 +13,10 @@ const ProductWrapper = styled.div`
   display: flex;
   gap: 5rem;
   justify-content: center;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const ImagesWrapper = styled.div`
@@ -29,6 +33,10 @@ const ImagesWrapper = styled.div`
       margin: 0 auto;
     }
   }
+
+  @media (max-width: 480px) {
+    flex-basis: 100%;
+  }
 `;
 
 const DetailWrapper = styled.div`
@@ -36,6 +44,10 @@ const DetailWrapper = styled.div`
   border-radius: 10px;
   padding: 20px;
   flex-basis: 60%;
+
+  @media (max-width: 480px) {
+    flex-basis: 100%;
+  }
 `;
 
 const SmallImagesWrapper = styled.div`
@@ -74,6 +86,11 @@ const PriceWrapper = styled.div`
   align-content: center;
   align-items: center;
   margin: 2rem 0;
+
+  @media (max-width: 480px) {
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
 `;
 
 const Price = styled.h4`

@@ -15,6 +15,10 @@ const FeaturedDiv = styled.div`
   display: flex;
   gap: 100px;
   justify-content: space-between;
+
+  @media(max-width:480px){
+    flex-wrap: wrap;
+  }
 `;
 
 const FeaturedTitle = styled.h2`

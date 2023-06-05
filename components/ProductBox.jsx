@@ -10,6 +10,11 @@ const ProductWrapper = styled.div`
   max-width: calc(25% - 2rem);
   max-height: 180px;
   margin-bottom: 30px;
+
+  @media(max-width:480px){
+    max-width: 100%;
+    margin-bottom: 50px;
+  }
 `;
 
 const ProductTitle = styled(Link)`

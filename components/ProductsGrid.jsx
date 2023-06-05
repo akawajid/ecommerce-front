@@ -6,6 +6,9 @@ const ProductsList = styled.div`
   flex-wrap: wrap;
   gap: 2rem;
   margin: 40px 0;
+
+  @media(max-width:480px){
+  }
 `;
 
 export default function ProductsGrid({ products }) {
